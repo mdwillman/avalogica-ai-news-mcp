@@ -1,0 +1,26 @@
+# Node / TypeScript
+node_modules/
+*.log
+
+# Environment files
+.env
+.env.*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Build caches
+.cache/
+.nyc_output/
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+
+# Ngrok config
+.ngrok2/
+
+# Python virtual environment
+.venv/
