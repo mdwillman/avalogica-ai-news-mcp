@@ -5,6 +5,7 @@ node_modules/
 # Environment files
 .env
 .env.*
+!.env.example
 
 # OS junk
 .DS_Store
