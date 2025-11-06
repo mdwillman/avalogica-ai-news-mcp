@@ -223,11 +223,12 @@ export const getTechUpdateTool = {
                 title: topicDefinition.title,
                 description: topicDefinition.description,
             };
+            // ✅ Include fingerprint directly in returned text
             return {
                 content: [
                     {
                         type: "text",
-                        text: JSON.stringify(result, null, 2),
+                        text: JSON.stringify(result, null, 2) + "\n\n[served by avalogica-ai-news-mcp]",
                     },
                 ],
             };
@@ -237,7 +238,9 @@ export const getTechUpdateTool = {
             if (error instanceof McpError) {
                 throw error;
             }
-            const message = error instanceof Error ? error.message : "Unexpected error calling OpenAI Responses API.";
+            const message = error instanceof Error
+                ? error.message
+                : "Unexpected error calling OpenAI Responses API.";
             throw new McpError(ErrorCode.InternalError, message);
         }
     },

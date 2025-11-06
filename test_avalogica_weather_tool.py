@@ -14,10 +14,11 @@ async def _logging_async_send(self, request, *args, **kwargs):
 httpx.AsyncClient.send = _logging_async_send
 # ---- END HTTPX MONKEY-PATCH ----
 
-# Load environment variables (.env should include DEDALUS_API_KEY and OPENAI_API_KEY)
+# Load environment variables (for DEDALUS_API_KEY and OPENAI_API_KEY)
 load_dotenv()
 
 async def main():
+    # Initialize Dedalus client and runner
     client = AsyncDedalus()
     runner = DedalusRunner(client)
 
@@ -29,15 +30,15 @@ async def main():
     runner._orig_run = runner.run
     runner.run = functools.partial(_run_wrapper, runner)
 
-    # 🧩 Force Dedalus to target only your deployed MCP server
+    # 🧩 Test call to the `get_forecast` tool from your new AI News MCP server
     result = await runner.run(
         input=(
-            "Run the tool `get_tech_update` from the MCP server `mdwillman/avalogica-ai-news-mcp` "
-            "with topic='techResearch'. The response must come directly from that MCP server. "
-            "Return the JSON output exactly as provided by the server."
+            "Use the avalogica-ai-news-mcp tool 'get_forecast' with "
+            "latitude=40.7128, longitude=-74.0060, and days=3. "
+            "Return the JSON result exactly as provided by that MCP server."
         ),
         model="openai/gpt-5-mini",
-        mcp_servers=["mdwillman/avalogica-ai-news-mcp"],  # restrict context to your server
+        mcp_servers=["mdwillman/avalogica-ai-news-mcp"],  # 🔒 target your AI News MCP deployment
         stream=False
     )
 

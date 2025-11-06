@@ -244,6 +244,7 @@ export const getTechUpdateTool = {
       required: ["topic"],
     },
   },
+
   handler: async (args: TechUpdateArgs): Promise<CallToolResult> => {
     const topicDefinition = resolveTopic(args.topic);
     if (!topicDefinition) {
@@ -257,6 +258,7 @@ export const getTechUpdateTool = {
 
     try {
       console.log("[AI News MCP] 🔍 Fingerprint: techUpdate handler invoked successfully");
+
       const response = await newsClient.createResponse({
         model: "gpt-4.1-2025-04-14",
         tools: [{ type: "web_search_preview" }],
@@ -288,11 +290,12 @@ export const getTechUpdateTool = {
         description: topicDefinition.description,
       };
 
+      // ✅ Include fingerprint directly in returned text
       return {
         content: [
           {
             type: "text",
-            text: JSON.stringify(result, null, 2),
+            text: JSON.stringify(result, null, 2) + "\n\n[served by avalogica-ai-news-mcp]",
           },
         ],
       };
@@ -304,7 +307,9 @@ export const getTechUpdateTool = {
       }
 
       const message =
-        error instanceof Error ? error.message : "Unexpected error calling OpenAI Responses API.";
+        error instanceof Error
+          ? error.message
+          : "Unexpected error calling OpenAI Responses API.";
 
       throw new McpError(ErrorCode.InternalError, message);
     }
