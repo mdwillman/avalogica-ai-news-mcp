@@ -14,7 +14,7 @@ async def _logging_async_send(self, request, *args, **kwargs):
 httpx.AsyncClient.send = _logging_async_send
 # ---- END HTTPX MONKEY-PATCH ----
 
-# Load environment variables (optional if you later use API keys)
+# Load environment variables (optional, but useful if you’re debugging API calls)
 load_dotenv()
 
 async def main():
@@ -31,11 +31,14 @@ async def main():
     runner._orig_run = runner.run
     runner.run = functools.partial(_run_wrapper, runner)
 
-    # Run a request using your deployed weather MCP server
+    # 🧩 Test call to your deployed AI News MCP server
     result = await runner.run(
-        input="Use the avalogica-weather-mcp tool 'get_forecast' with latitude=40.7128, longitude=-74.0060, and days=3. Return the result exactly as provided by that MCP server.",
-        model="openai/gpt-5-mini",  # or another model available in your account
-        mcp_servers=["mdwillman/avalogica-weather-mcp"],  # your MCP server slug
+        input=(
+            "Use the avalogica-ai-news-mcp tool 'get_tech_update' with topic='techResearch'. "
+            "Return the structured result exactly as provided by that MCP server."
+        ),
+        model="openai/gpt-5-mini",  # or another available model
+        mcp_servers=["mdwillman/avalogica-ai-news-mcp"],  # your new MCP server slug
         stream=False
     )
 

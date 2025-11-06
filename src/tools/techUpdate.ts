@@ -256,6 +256,7 @@ export const getTechUpdateTool = {
     const prompt = buildPrompt(topicDefinition);
 
     try {
+      console.log("[AI News MCP] 🔍 Fingerprint: techUpdate handler invoked successfully");
       const response = await newsClient.createResponse({
         model: "gpt-4.1-2025-04-14",
         tools: [{ type: "web_search_preview" }],
