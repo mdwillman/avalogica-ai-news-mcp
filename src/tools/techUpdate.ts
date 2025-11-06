@@ -3,7 +3,7 @@ import {
   ErrorCode,
   McpError,
 } from "@modelcontextprotocol/sdk/types.js";
-import { OpenAIClient } from "../openaiClient.js";
+import { NewsClient } from "../newsClient.js";
 import {
   TechUpdateArgs,
   TechUpdateCitation,
@@ -89,7 +89,7 @@ for (const topic of TOPIC_DEFINITIONS) {
   topicIndex.set(topic.slug.toLowerCase(), topic);
 }
 
-const openAiClient = new OpenAIClient();
+const newsClient = new NewsClient();
 
 function normalizeTopicKey(topic: string): string {
   return topic.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -256,7 +256,7 @@ export const getTechUpdateTool = {
     const prompt = buildPrompt(topicDefinition);
 
     try {
-      const response = await openAiClient.createResponse({
+      const response = await newsClient.createResponse({
         model: "gpt-4.1-2025-04-14",
         tools: [{ type: "web_search_preview" }],
         input: prompt,

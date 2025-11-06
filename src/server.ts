@@ -9,16 +9,16 @@ import { getForecastTool, getTechUpdateTool } from "./tools/index.js";
 import { GetForecastArgs, TechUpdateArgs } from "./types.js";
 
 /**
- * Main server class for Avalogica Weather MCP integration
- * @class WeatherServer
+ * Main server class for Avalogica AI News MCP integration
+ * @class AiNewsServer
  */
-export class WeatherServer {
+export class AiNewsServer {
     private server: Server;
 
     constructor() {
         this.server = new Server(
             {
-                name: 'avalogica-weather',
+                name: 'avalogica-ai-news',
                 version: '0.1.0',
             },
             {
@@ -33,9 +33,9 @@ export class WeatherServer {
     }
 
     /**
- * Registers all MCP tool handlers for the Avalogica Weather MCP server.
- * @private
- */
+     * Registers all MCP tool handlers for the Avalogica AI News MCP server.
+     * @private
+     */
     private setupHandlers(): void {
         // ---- List Available Tools ----
         this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -46,10 +46,8 @@ export class WeatherServer {
         this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
             const { name, arguments: args } = request.params;
 
-            // Route tool calls by name
             switch (name) {
                 case "get_forecast": {
-                    // Validate argument structure
                     if (
                         !args ||
                         typeof args !== "object" ||
@@ -61,8 +59,6 @@ export class WeatherServer {
                             "Invalid or missing arguments for get_forecast. Expected { latitude: number, longitude: number, days?: number }."
                         );
                     }
-
-                    // Safe, typed call to the forecast handler
                     return await getForecastTool.handler(args as unknown as GetForecastArgs);
                 }
 
@@ -78,12 +74,10 @@ export class WeatherServer {
                             "Invalid or missing arguments for get_tech_update. Expected { topic: string }."
                         );
                     }
-
                     return await getTechUpdateTool.handler(args as unknown as TechUpdateArgs);
                 }
 
                 default:
-                    // Unknown tool requested
                     throw new McpError(
                         ErrorCode.MethodNotFound,
                         `Unknown tool: ${name}`
@@ -97,7 +91,7 @@ export class WeatherServer {
      * @private
      */
     private setupErrorHandling(): void {
-        this.server.onerror = (error) => console.error('[MCP Error]', error);
+        this.server.onerror = (error) => console.error('[AI News MCP Error]', error);
 
         process.on('SIGINT', async () => {
             await this.server.close();
@@ -115,14 +109,14 @@ export class WeatherServer {
 }
 
 /**
- * Factory function for creating standalone Avalogica Weather MCP server instances.
+ * Factory function for creating standalone Avalogica AI News MCP server instances.
  * Used by HTTP transport for session-based connections.
  * @returns {Server} Configured MCP server instance
  */
 export function createStandaloneServer(): Server {
     const server = new Server(
         {
-            name: 'avalogica-weather-discovery',
+            name: 'avalogica-ai-news-discovery',
             version: '0.1.0',
         },
         {
@@ -143,7 +137,6 @@ export function createStandaloneServer(): Server {
 
         switch (name) {
             case "get_forecast": {
-                // Validate arguments before invoking tool
                 if (
                     !args ||
                     typeof args !== "object" ||
@@ -155,7 +148,6 @@ export function createStandaloneServer(): Server {
                         "Invalid or missing arguments for get_forecast. Expected { latitude: number, longitude: number, days?: number }."
                     );
                 }
-
                 return await getForecastTool.handler(args as unknown as GetForecastArgs);
             }
 
@@ -171,7 +163,6 @@ export function createStandaloneServer(): Server {
                         "Invalid or missing arguments for get_tech_update. Expected { topic: string }."
                     );
                 }
-
                 return await getTechUpdateTool.handler(args as unknown as TechUpdateArgs);
             }
 

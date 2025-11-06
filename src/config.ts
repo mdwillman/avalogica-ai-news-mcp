@@ -1,5 +1,5 @@
 /**
- * Configuration interface for Avalogica Weather MCP
+ * Configuration interface for Avalogica AI News MCP
  */
 export interface Config {
   /** Optional API key for external weather providers */

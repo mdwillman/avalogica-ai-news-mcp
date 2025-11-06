@@ -1,4 +1,4 @@
 /**
- * Type definitions for Avalogica Weather MCP
+ * Type definitions for Avalogica AI News MCP
  */
 export {};

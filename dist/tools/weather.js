@@ -1,4 +1,4 @@
-import { WeatherClient } from "../client.js";
+import { WeatherClient } from "../weatherClient.js";
 /**
  * MCP Tool: get_forecast
  * Retrieves a multi-day weather forecast for specified coordinates.

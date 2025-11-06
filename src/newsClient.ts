@@ -18,7 +18,7 @@ export interface OpenAIResponsesResult {
 /**
  * Minimal client for interacting with the OpenAI Responses API.
  */
-export class OpenAIClient {
+export class NewsClient {
   private readonly baseUrl = "https://api.openai.com/v1/responses";
 
   constructor(

@@ -8,5 +8,5 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 export async function runStdioTransport(server) {
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error('[Weather MCP] Server running on stdio');
+    console.error('[AI News MCP] Server running on stdio');
 }

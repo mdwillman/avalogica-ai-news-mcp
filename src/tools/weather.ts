@@ -1,5 +1,5 @@
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { WeatherClient } from "../client.js";
+import { WeatherClient } from "../weatherClient.js";
 import { GetForecastArgs, WeatherForecastResponse } from "../types.js";
 
 /**
