@@ -12,7 +12,8 @@
     "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js', '755')\"",
     "start": "node dist/index.js --port 8080",
     "dev:stdio": "tsx src/index.ts --stdio",
-    "dev:shttp": "tsx src/index.ts --port 8080",
+    "dev:http": "tsx src/index.ts --port 8080",
+    "new-tool": "tsx scripts/newTool.ts",
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector dist/index.js"
