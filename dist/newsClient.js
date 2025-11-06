@@ -14,6 +14,9 @@ export class NewsClient {
         if (!key) {
             throw new Error("Missing OPENAI_API_KEY environment variable.");
         }
+        if (payload.tools && !payload.tool_choice) {
+            payload.tool_choice = "auto";
+        }
         const response = await this.fetchImpl(this.baseUrl, {
             method: "POST",
             headers: {
@@ -32,6 +35,10 @@ export class NewsClient {
         if (!contentType.includes("application/json")) {
             throw new Error("Unexpected response format from OpenAI Responses API.");
         }
+        // const json = (await response.json()) as OpenAIResponsesResult;
+        // Debugging: log the full raw response object
+        // console.error("[AI News MCP] 🔍 Raw OpenAI Responses API output:\n", JSON.stringify(json, null, 2));
+        // return json;
         return (await response.json());
     }
 }

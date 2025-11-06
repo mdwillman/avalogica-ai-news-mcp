@@ -62,4 +62,5 @@ export interface TechUpdateResult {
   topic: string;
   title: string;
   description: string;
+  fingerprint: string; 
 }

@@ -70,13 +70,13 @@ async function createNewSession(req, res, config) {
         sessionIdGenerator: () => randomUUID(),
         onsessioninitialized: (sessionId) => {
             sessions.set(sessionId, { transport, server: serverInstance });
-            console.log('[AI News MCP] New session created:', sessionId);
+            // console.error('[AI News MCP] New session created:', sessionId);
         }
     });
     transport.onclose = () => {
         if (transport.sessionId) {
             sessions.delete(transport.sessionId);
-            console.log('[AI News MCP] Session closed:', transport.sessionId);
+            // console.error('[AI News MCP] Session closed:', transport.sessionId);
         }
     };
     try {
@@ -84,7 +84,7 @@ async function createNewSession(req, res, config) {
         await transport.handleRequest(req, res);
     }
     catch (error) {
-        console.error('[AI News MCP] Streamable HTTP connection error:', error);
+        // console.error('[AI News MCP] Streamable HTTP connection error:', error);
         res.statusCode = 500;
         res.end('Internal server error');
     }
@@ -121,7 +121,7 @@ function logServerStart(config) {
     const displayUrl = config.isProduction
         ? `Port ${config.port}`
         : `http://localhost:${config.port}`;
-    console.log(`[AI News MCP] Server listening on ${displayUrl}`);
+    console.error(`[AI News MCP] Server listening on ${displayUrl}`);
     if (!config.isProduction) {
         console.log('Put this in your client config:');
         console.log(JSON.stringify({

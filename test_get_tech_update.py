@@ -1,10 +1,11 @@
 import asyncio
-from dedalus_labs import AsyncDedalus, DedalusRunner
+import functools
+import httpx
 from dotenv import load_dotenv
+from dedalus_labs import AsyncDedalus, DedalusRunner
 from dedalus_labs.utils.streaming import stream_async
 
 # ---- BEGIN HTTPX MONKEY-PATCH ----
-import httpx
 _orig_async_send = httpx.AsyncClient.send
 
 async def _logging_async_send(self, request, *args, **kwargs):
@@ -14,15 +15,14 @@ async def _logging_async_send(self, request, *args, **kwargs):
 httpx.AsyncClient.send = _logging_async_send
 # ---- END HTTPX MONKEY-PATCH ----
 
-# Load environment variables (for DEDALUS_API_KEY and OPENAI_API_KEY)
+# Env variables (.env should contain DEDALUS_API_KEY and OPENAI_API_KEY)
 load_dotenv()
 
 async def main():
-    # Initialize Dedalus client and runner
     client = AsyncDedalus()
     runner = DedalusRunner(client)
 
-    import functools
+    # Optional log runner invocation
     async def _run_wrapper(self, *args, **kwargs):
         print(f"🧩 DedalusRunner.run called with args={args}, kwargs={kwargs}")
         return await self._orig_run(*args, **kwargs)
@@ -30,15 +30,16 @@ async def main():
     runner._orig_run = runner.run
     runner.run = functools.partial(_run_wrapper, runner)
 
-    # 🧩 Test call to the `get_forecast` tool from your new AI News MCP server
+    test_input = (
+        "Call the registered MCP server tool `get_tech_update` from "
+        "`mdwillman/avalogica-ai-news-mcp` with topic='aiProductUpdates'. "
+        "Return the JSON response from the server exactly as provided."
+    )
+
     result = await runner.run(
-        input=(
-            "Use the avalogica-ai-news-mcp tool 'get_forecast' with "
-            "latitude=40.7128, longitude=-74.0060, and days=3. "
-            "Return the JSON result exactly as provided by that MCP server."
-        ),
+        input=test_input,
         model="openai/gpt-5-mini",
-        mcp_servers=["mdwillman/avalogica-ai-news-mcp"],  # 🔒 target your AI News MCP deployment
+        mcp_servers=["mdwillman/avalogica-ai-news-mcp"],
         stream=False
     )
 
