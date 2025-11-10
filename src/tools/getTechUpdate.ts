@@ -136,12 +136,10 @@ function resolveTopic(topic: string): TopicDefinition | undefined {
 function extractResponseText(response: any): string | undefined {
   if (!response) return undefined;
 
-  // Fast path: use output_text if present
   if (typeof response.output_text === "string" && response.output_text.trim()) {
     return response.output_text.trim();
   }
 
-  // Look for assistant messages in structured outputs
   if (Array.isArray(response.output)) {
     for (const block of response.output) {
       if (block.type === "message" && Array.isArray(block.content)) {
@@ -154,7 +152,6 @@ function extractResponseText(response: any): string | undefined {
     }
   }
 
-  // Fallback: sometimes the Responses API nests outputs in data or tool_outputs
   if (response.data) {
     const nested = extractResponseText(response.data);
     if (nested) return nested;
@@ -227,9 +224,7 @@ function extractCitations(input: unknown, fallbackText: string): TechUpdateCitat
 }
 
 /**
- * 🔍 Helper: Preview the prompt template for a given topic
- * Example usage:
- *   npx tsx src/tools/getTechUpdate.ts aiProductUpdates
+ * helper: preview prompt template for given topic
  */
 export function promptTemplatePreview(topic: string): void {
   const topicDefinition = resolveTopic(topic);
@@ -271,7 +266,6 @@ export const getTechUpdateTool = {
       );
     }
 
-    // Build the full model prompt
     const prompt =
       topicDefinition.promptTemplate.trim() +
       "\n\nAfter gathering any relevant information from search results, " +
@@ -287,7 +281,6 @@ export const getTechUpdateTool = {
         input: prompt,
       });
 
-      // ✅ Use the new extractor to pull actual content (not ws_... ID)
       const text = extractResponseText(response);
 
       if (!text) {
@@ -311,10 +304,9 @@ export const getTechUpdateTool = {
         fingerprint: "[served by avalogica-ai-news-mcp]",
       };
 
-      // 🧾 Optional debug snippet
       console.error("[AI News MCP] 🧩 Extracted content preview:\n", text.slice(0, 200));
 
-      // ✅ Return as valid JSON text for Dedalus
+      // return as valid JSON text for Dedalus
       return {
         content: [
           {
@@ -335,7 +327,7 @@ export const getTechUpdateTool = {
 
 };
 
-// ✅ Allow command-line preview usage with metadata display
+// allow command-line preview usage with metadata display
 if (process.argv[1] && process.argv[1].includes("techUpdate.ts")) {
   const arg = process.argv[2];
 
@@ -361,7 +353,7 @@ if (process.argv[1] && process.argv[1].includes("techUpdate.ts")) {
     console.log("\n-----------------------------------------------\n");
   }
 
-  // 🗂️ If no topic argument is given, show a list of all topics
+  // if no topic argument given, show list of all topics
   else {
     console.log("\nAvailable Topics\n===============================================");
     for (const topic of TOPIC_DEFINITIONS) {

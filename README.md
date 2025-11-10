@@ -1,6 +1,6 @@
 # Avalogica AI News MCP
 
-**Version:** 0.1.0  
+**Version:** 0.2.0  
 **License:** MIT
 
 The Avalogica AI News MCP server combines the original Avalogica weather forecasting tool with a new AI and technology news update tool. It follows the [Model Context Protocol (MCP)](https://modelcontextprotocol.io) specification and works with Atlas, the Dedalus SDK, and other compatible clients.
@@ -9,8 +9,10 @@ The Avalogica AI News MCP server combines the original Avalogica weather forecas
 
 ## Features
 
-- ✅ **Weather forecasts** via the `get_forecast` tool (unchanged from the original project).
-- 🆕 **AI technology briefings** via the `get_tech_update` tool powered by OpenAI's Responses API with web search preview.
+- **Weather forecasts** via the `get_forecast` tool (multi-day daily highs/lows).
+- **Hourly weather** via the `get_hourly_forecast` tool (24–48h hourly temps and precip probabilities).
+- **Air quality & marine conditions** via the `get_air_quality` and `get_marine_conditions` tools backed by Open-Meteo.
+- **AI technology briefings** via the `get_tech_update` tool powered by OpenAI's Responses API with web search preview.
 - Dual transports (STDIO and HTTP) with a `/health` route for readiness checks.
 - TypeScript-first build pipeline with strict type checking.
 
@@ -70,6 +72,23 @@ The HTTP server exposes:
 ### `get_forecast`
 - **Input:** `{ latitude: number, longitude: number, days?: number }`
 - **Output:** Plain-text daily high/low temperature summary.
+
+### `get_hourly_forecast`
+- **Input:** `{ latitude: number, longitude: number, hours?: number }` (default `hours = 24`, max `48`)
+- **Output:** Plain-text hourly summary (temperatures and precipitation probabilities) over the requested horizon.
+
+### `get_air_quality`
+- **Input:** `{ latitude: number, longitude: number, hours?: number }` (default `hours = 24`, max `120`)
+- **Output:** Plain-text snapshot of current air quality plus a short outlook, including:
+  - US AQI and European AQI categories where available
+  - PM2.5 and PM10 estimates
+
+### `get_marine_conditions`
+- **Input:** `{ latitude: number, longitude: number, hours?: number }` (default `hours = 24`, max `120`)
+- **Output:** Plain-text summary of near-term marine conditions, including:
+  - Wave height, direction, and period
+  - Sea surface temperature
+  - Max wave height over the requested window
 
 ### `get_tech_update`
 - **Input:** `{ topic: string }`

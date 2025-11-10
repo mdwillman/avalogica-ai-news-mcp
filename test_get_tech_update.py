@@ -32,7 +32,7 @@ async def main():
 
     test_input = (
         "Call the registered MCP server tool `get_tech_update` from "
-        "`mdwillman/avalogica-ai-news-mcp` with topic='aiProductUpdates'. "
+        "`mdwillman/avalogica-ai-news-mcp` with topic='aiProducts'. "
         "Return the JSON response from the server exactly as provided."
     )
 

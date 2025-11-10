@@ -147,7 +147,7 @@ function logServerStart(config: Config): void {
         ? `Port ${config.port}` 
         : `http://localhost:${config.port}`;
     
-    console.error(`[AI News MCP] Server listening on ${displayUrl}`);
+    // console.error(`[AI News MCP] Server listening on ${displayUrl}`);
 
     if (!config.isProduction) {
         console.log('Put this in your client config:');
