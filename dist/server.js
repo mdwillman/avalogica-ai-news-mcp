@@ -10,7 +10,7 @@ export class AiNewsServer {
     constructor() {
         this.server = new Server({
             name: 'avalogica-ai-news',
-            version: '0.1.0',
+            version: '0.2.0',
         }, {
             capabilities: {
                 tools: {},
@@ -121,7 +121,7 @@ export class AiNewsServer {
 export function createStandaloneServer() {
     const server = new Server({
         name: 'avalogica-ai-news-discovery',
-        version: '0.1.0',
+        version: '0.2.0',
     }, {
         capabilities: {
             tools: {},

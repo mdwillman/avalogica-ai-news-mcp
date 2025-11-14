@@ -1,6 +1,6 @@
 {
   "name": "avalogica-ai-news-mcp",
-  "version": "0.2.0"
+  "version": "0.2.0",
   "description": "Avalogica AI News MCP server delivering weather forecasts and AI technology updates via the Model Context Protocol (MCP).",
   "private": false,
   "type": "module",

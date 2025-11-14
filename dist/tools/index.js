@@ -3,3 +3,4 @@ export { getHourlyForecastTool } from "./getHourlyForecast.js";
 export { getAirQualityTool } from "./getAirQuality.js";
 export { getMarineConditionsTool } from "./getMarineConditions.js";
 export { getTechUpdateTool } from "./getTechUpdate.js";
+export { listTechTopicsTool } from "./listTechTopics.js";

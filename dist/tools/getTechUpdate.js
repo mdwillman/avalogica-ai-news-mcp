@@ -1,110 +1,7 @@
 import { ErrorCode, McpError, } from "@modelcontextprotocol/sdk/types.js";
 import { NewsClient } from "../newsClient.js";
-const TOPIC_DEFINITIONS = [
-    {
-        slug: "aiProductUpdates",
-        title: "AI Product & Platform Updates",
-        description: "Recent improvements or new features added to existing AI products or platforms.",
-        promptTemplate: `
-Generate a concise, formatted news-style update about recent improvements to AI products or platforms.
-Follow this structure:
-1. Level 3 header for topic
-2. Today's date in bold on a new line under the header
-3. 1–4 sections marked with clear level 4 headers
-4. Each section highlights one notable update from a leading company, startup, or lab
-
-Special Requirements:
-- Prioritize developments from the past month
-- Focus on performance improvements, new capabilities, and usability upgrades
-- Use no more than 8 reputable sources
-- If there are no notable updates this month, summarize key enhancements from the recent past
-- Target an audience of AI developers and builders
-- Include inline numeric citations [1], [2], etc., linked to credible references
-`,
-        keywords: ["aiproductupdates", "productupdates", "platformupdates", "aiproduct"],
-    },
-    {
-        slug: "aiProducts",
-        title: "AI Products",
-        description: "AI-driven tools or services recently launched.",
-        promptTemplate: `
-Generate a concise, formatted tech update about recently launched AI-powered products or platforms.
-Follow this structure:
-1. Level 2 header for topic
-2. Today's date in bold on a separate line under the header
-3. 1–4 sections with clear level 3 headers
-4. Each section describes one or more launches from major companies, startups, or labs
-
-Special Requirements:
-- Prioritize releases within the past month
-- Highlight unique capabilities or applications relevant to AI developers
-- Avoid general consumer summaries
-- Use no more than 8 reputable sources
-- If no major launches occurred this month, mention noteworthy product releases from the past quarter instead
-- Include inline numeric citations [1], [2], etc.
-`,
-        keywords: ["aiproducts", "newaiproducts", "aiproductlaunches"],
-    },
-    {
-        slug: "newModels",
-        title: "New AI Model Releases",
-        description: "Fresh releases of base or fine-tuned AI models and platform capabilities.",
-        promptTemplate: `
-Generate a short, formatted summary of new AI model releases or fine-tunes from the past month.
-Include model names, organizations, and notable capabilities.
-Emphasize benchmark results, training innovations, and practical deployment notes.
-Include inline numeric citations and stay under 200 words.
-`,
-        keywords: ["newmodels", "modelrelease", "modelreleases", "latestmodels"],
-    },
-    {
-        slug: "techResearch",
-        title: "AI & Tech Research Highlights",
-        description: "Notable research publications, benchmarks, and open-source releases in AI and adjacent fields.",
-        promptTemplate: `
-Write a concise research summary highlighting 2–4 notable AI or tech papers, benchmarks, or open-source releases.
-Emphasize key findings, performance metrics, and implications for practitioners.
-Include inline numeric citations and stay under 200 words.
-`,
-        keywords: ["techresearch", "airesearch", "researchupdates", "mlresearch"],
-    },
-    {
-        slug: "polEthicsAndSafety",
-        title: "Policy, Ethics & Safety",
-        description: "Developments in AI regulation, governance frameworks, safety tooling, and ethical debates.",
-        promptTemplate: `
-Provide a brief overview of major developments in AI policy, governance, and safety initiatives.
-Summarize new regulations, frameworks, or ethics-related proposals.
-Use inline numeric citations and keep the tone factual and balanced.
-`,
-        keywords: ["polethicsandsafety", "policyethics", "polsafety"],
-    },
-    {
-        slug: "upcomingEvents",
-        title: "Upcoming AI & Tech Events",
-        description: "Major conferences, product showcases, and community gatherings worth tracking.",
-        promptTemplate: `
-List and summarize 3–5 notable upcoming AI or tech events happening soon.
-Mention dates, key topics, and why each event matters to practitioners.
-Include citations to official event pages.
-`,
-        keywords: ["upcomingevents", "aievents", "techevents"],
-    },
-];
-const topicIndex = new Map();
-for (const topic of TOPIC_DEFINITIONS) {
-    for (const keyword of topic.keywords) {
-        topicIndex.set(keyword, topic);
-    }
-    topicIndex.set(topic.slug.toLowerCase(), topic);
-}
+import { resolveTopic, TOPIC_DEFINITIONS, listAllTopicKeys, } from "./topics.js";
 const newsClient = new NewsClient();
-function normalizeTopicKey(topic) {
-    return topic.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-function resolveTopic(topic) {
-    return topicIndex.get(normalizeTopicKey(topic));
-}
 function extractResponseText(response) {
     if (!response)
         return undefined;
@@ -195,7 +92,7 @@ export function promptTemplatePreview(topic) {
     const topicDefinition = resolveTopic(topic);
     if (!topicDefinition) {
         console.error(`❌ Unknown topic: ${topic}`);
-        console.info("Available topics:", [...topicIndex.keys()].join(", "));
+        console.info("Available topics:", listAllTopicKeys().join(", "));
         process.exit(1);
     }
     console.log(`\n🧠 Prompt template for topic: ${topicDefinition.title}\n`);

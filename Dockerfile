@@ -2,23 +2,20 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Copy dependency files
+# Copy dependency + config files
 COPY package*.json ./
+COPY tsconfig*.json ./
+COPY src ./src
 
-# Install dependencies (omit dev dependencies for production)
-RUN npm install --omit=dev
+# Install deps (this will run "prepare", but now TS files exist)
+RUN npm install
 
-# Copy the full project
-COPY . .
+# (Optional) explicit build; if "prepare" already builds, you can skip this
+# RUN npm run build
 
-# Build TypeScript to dist/
-RUN npm run build
-
-# Set environment variables
 ENV NODE_ENV=production
 ENV PORT=8080
 
 EXPOSE 8080
 
-# Run the compiled server using HTTP transport
-CMD ["node", "dist/index.js", "--port", "8080"]
+CMD ["node", "dist/index.js"]
